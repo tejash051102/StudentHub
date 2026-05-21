@@ -30,8 +30,9 @@ export default function Register() {
     <section className="auth-screen">
       <form className="auth-panel wide" onSubmit={handleSubmit}>
         <div>
-          <span className="eyebrow">Student Records</span>
-          <h1>Create account</h1>
+          <span className="eyebrow">StudentHub</span>
+          <h1>Create institution account</h1>
+          <p>Set up an admin workspace for your college or academic department.</p>
         </div>
         {error && <p className="alert">{error}</p>}
         <div className="form-grid">

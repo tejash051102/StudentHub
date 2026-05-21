@@ -41,11 +41,17 @@ export default function Courses() {
         <div>
           <span className="eyebrow">Academics</span>
           <h1>Courses</h1>
+          <p>Create and maintain academic programs, credits, duration, and departments.</p>
         </div>
       </div>
 
       <form className="panel record-form" onSubmit={handleSubmit}>
-        <h2>Add Course</h2>
+        <div className="section-title">
+          <div>
+            <h2>Add Course</h2>
+            <p>Keep course data consistent for student records and analytics.</p>
+          </div>
+        </div>
         <div className="form-grid">
           {[
             ['name', 'Course Name'],
@@ -86,8 +92,8 @@ export default function Courses() {
       <section className="course-grid">
         {courses.map((course) => (
           <article key={course._id} className="course-card">
+            <span className="course-badge">{course.code}</span>
             <div>
-              <strong>{course.code}</strong>
               <h2>{course.name}</h2>
               <p>{course.description || 'No description added.'}</p>
             </div>
@@ -101,6 +107,12 @@ export default function Courses() {
             </button>
           </article>
         ))}
+        {!courses.length && (
+          <article className="course-card empty-course">
+            <h2>No courses yet</h2>
+            <p>Add your first academic program to start building the StudentHub catalog.</p>
+          </article>
+        )}
       </section>
     </section>
   );

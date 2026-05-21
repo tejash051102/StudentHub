@@ -24,8 +24,9 @@ export default function Login() {
     <section className="auth-screen">
       <form className="auth-panel" onSubmit={handleSubmit}>
         <div>
-          <span className="eyebrow">Student Records</span>
-          <h1>Sign in</h1>
+          <span className="eyebrow">StudentHub</span>
+          <h1>Welcome back</h1>
+          <p>Sign in to manage students, courses, departments, and analytics.</p>
         </div>
         {error && <p className="alert">{error}</p>}
         <label>
@@ -48,9 +49,20 @@ export default function Login() {
         </label>
         <button type="submit">Login</button>
         <p>
-          New administrator? <Link to="/register">Create account</Link>
+          New to StudentHub? <Link to="/register">Create account</Link>
         </p>
       </form>
+      <aside className="auth-showcase">
+        <span className="eyebrow">Campus SaaS Dashboard</span>
+        <h2>Student information, attendance, and academics in one place.</h2>
+        <div className="mini-chart">
+          <i style={{ height: '55%' }} />
+          <i style={{ height: '72%' }} />
+          <i style={{ height: '48%' }} />
+          <i style={{ height: '88%' }} />
+          <i style={{ height: '64%' }} />
+        </div>
+      </aside>
     </section>
   );
 }

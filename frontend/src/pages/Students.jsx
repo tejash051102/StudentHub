@@ -22,6 +22,8 @@ export default function Students() {
   const [filters, setFilters] = useState({ search: '', department: '', status: '', page: 1 });
   const [pagination, setPagination] = useState({ page: 1, pages: 1, total: 0 });
   const [message, setMessage] = useState('');
+  const [formOpen, setFormOpen] = useState(false);
+  const [viewStudent, setViewStudent] = useState(null);
 
   const query = useMemo(() => {
     const params = new URLSearchParams();
@@ -59,6 +61,7 @@ export default function Students() {
 
     setEditingId(null);
     setForm(emptyStudent);
+    setFormOpen(false);
     loadStudents();
   }
 
@@ -77,6 +80,7 @@ export default function Students() {
       status: student.status,
       address: student.address || ''
     });
+    setFormOpen(true);
   }
 
   async function removeStudent(id) {
@@ -88,92 +92,39 @@ export default function Students() {
     <section className="page">
       <div className="page-heading">
         <div>
-          <span className="eyebrow">Records</span>
+          <span className="eyebrow">Student Management</span>
           <h1>Students</h1>
+          <p>Add, update, view, and organize student records with filters and pagination.</p>
         </div>
+        <button
+          type="button"
+          onClick={() => {
+            setEditingId(null);
+            setForm(emptyStudent);
+            setFormOpen(true);
+          }}
+        >
+          Add Student
+        </button>
       </div>
 
-      <form className="panel record-form" onSubmit={handleSubmit}>
-        <h2>{editingId ? 'Update Student' : 'Add Student'}</h2>
-        {message && <p className="success">{message}</p>}
-        <div className="form-grid">
-          {[
-            ['firstName', 'First Name'],
-            ['lastName', 'Last Name'],
-            ['email', 'Email'],
-            ['phone', 'Phone'],
-            ['rollNumber', 'Roll Number'],
-            ['department', 'Department'],
-            ['course', 'Course']
-          ].map(([name, label]) => (
-            <label key={name}>
-              {label}
-              <input
-                type={name === 'email' ? 'email' : 'text'}
-                value={form[name]}
-                onChange={(event) => updateField(name, event.target.value)}
-                required
-              />
-            </label>
-          ))}
-          <label>
-            Semester
-            <input
-              type="number"
-              min="1"
-              max="12"
-              value={form.semester}
-              onChange={(event) => updateField('semester', Number(event.target.value))}
-              required
-            />
-          </label>
-          <label>
-            Enrollment Year
-            <input
-              type="number"
-              min="1990"
-              value={form.enrollmentYear}
-              onChange={(event) => updateField('enrollmentYear', Number(event.target.value))}
-              required
-            />
-          </label>
-          <label>
-            Status
-            <select value={form.status} onChange={(event) => updateField('status', event.target.value)}>
-              <option>Active</option>
-              <option>Inactive</option>
-              <option>Graduated</option>
-            </select>
-          </label>
-          <label className="span-2">
-            Address
-            <input value={form.address} onChange={(event) => updateField('address', event.target.value)} />
-          </label>
-        </div>
-        <div className="actions">
-          <button type="submit">{editingId ? 'Update' : 'Save'} Student</button>
-          {editingId && (
-            <button
-              type="button"
-              className="ghost-button"
-              onClick={() => {
-                setEditingId(null);
-                setForm(emptyStudent);
-              }}
-            >
-              Cancel
-            </button>
-          )}
-        </div>
-      </form>
-
       <section className="panel">
+        <div className="section-title">
+          <div>
+            <h2>Student Directory</h2>
+            <p>{pagination.total} records found</p>
+          </div>
+          {message && <p className="success inline-message">{message}</p>}
+        </div>
         <div className="toolbar">
-          <input
-            placeholder="Search records"
-            value={filters.search}
-            onChange={(event) => setFilters({ ...filters, search: event.target.value, page: 1 })}
-          />
+          <label className="search-field">
+            <span>Search</span>
+            <input
+              placeholder="Search by name, roll no., email..."
+              value={filters.search}
+              onChange={(event) => setFilters({ ...filters, search: event.target.value, page: 1 })}
+            />
+          </label>
           <input
             placeholder="Department"
             value={filters.department}
@@ -217,6 +168,9 @@ export default function Students() {
                     <span className="status-pill">{student.status}</span>
                   </td>
                   <td>
+                    <button type="button" className="small-button ghost-button" onClick={() => setViewStudent(student)}>
+                      View
+                    </button>
                     <button type="button" className="small-button" onClick={() => startEdit(student)}>
                       Edit
                     </button>
@@ -252,6 +206,116 @@ export default function Students() {
           </button>
         </div>
       </section>
+
+      {formOpen && (
+        <div className="modal-backdrop" role="presentation">
+          <form className="modal-panel record-form" onSubmit={handleSubmit}>
+            <div className="modal-heading">
+              <div>
+                <span className="eyebrow">Student Record</span>
+                <h2>{editingId ? 'Update Student' : 'Add Student'}</h2>
+              </div>
+              <button type="button" className="icon-button" aria-label="Close form" onClick={() => setFormOpen(false)}>
+                X
+              </button>
+            </div>
+            <div className="form-grid">
+              {[
+                ['firstName', 'First Name'],
+                ['lastName', 'Last Name'],
+                ['email', 'Email'],
+                ['phone', 'Phone'],
+                ['rollNumber', 'Roll Number'],
+                ['department', 'Department'],
+                ['course', 'Course']
+              ].map(([name, label]) => (
+                <label key={name}>
+                  {label}
+                  <input
+                    type={name === 'email' ? 'email' : 'text'}
+                    value={form[name]}
+                    onChange={(event) => updateField(name, event.target.value)}
+                    required
+                  />
+                </label>
+              ))}
+              <label>
+                Semester
+                <input
+                  type="number"
+                  min="1"
+                  max="12"
+                  value={form.semester}
+                  onChange={(event) => updateField('semester', Number(event.target.value))}
+                  required
+                />
+              </label>
+              <label>
+                Enrollment Year
+                <input
+                  type="number"
+                  min="1990"
+                  value={form.enrollmentYear}
+                  onChange={(event) => updateField('enrollmentYear', Number(event.target.value))}
+                  required
+                />
+              </label>
+              <label>
+                Status
+                <select value={form.status} onChange={(event) => updateField('status', event.target.value)}>
+                  <option>Active</option>
+                  <option>Inactive</option>
+                  <option>Graduated</option>
+                </select>
+              </label>
+              <label className="span-2">
+                Address
+                <input value={form.address} onChange={(event) => updateField('address', event.target.value)} />
+              </label>
+            </div>
+            <div className="actions">
+              <button type="submit">{editingId ? 'Update' : 'Save'} Student</button>
+              <button
+                type="button"
+                className="ghost-button"
+                onClick={() => {
+                  setEditingId(null);
+                  setForm(emptyStudent);
+                  setFormOpen(false);
+                }}
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      {viewStudent && (
+        <div className="modal-backdrop" role="presentation">
+          <section className="modal-panel student-profile-card">
+            <div className="modal-heading">
+              <div>
+                <span className="eyebrow">Student Details</span>
+                <h2>
+                  {viewStudent.firstName} {viewStudent.lastName}
+                </h2>
+              </div>
+              <button type="button" className="icon-button" aria-label="Close details" onClick={() => setViewStudent(null)}>
+                X
+              </button>
+            </div>
+            <div className="detail-grid">
+              <span>Email<strong>{viewStudent.email}</strong></span>
+              <span>Phone<strong>{viewStudent.phone}</strong></span>
+              <span>Roll Number<strong>{viewStudent.rollNumber}</strong></span>
+              <span>Department<strong>{viewStudent.department}</strong></span>
+              <span>Course<strong>{viewStudent.course}</strong></span>
+              <span>Status<strong>{viewStudent.status}</strong></span>
+            </div>
+          </section>
+        </div>
+      )}
     </section>
   );
 }

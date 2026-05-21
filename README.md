@@ -1,4 +1,4 @@
-# Student Record Management System
+# StudentHub - Student Information Management System
 
 A full-stack student management application with JWT authentication, student/course/department management, analytics dashboard, search/filter/pagination, and a responsive modern UI.
 
