@@ -49,6 +49,7 @@ body {
   margin: 0;
   min-width: 320px;
   background:
+    radial-gradient(circle at 80% 10%, rgba(34, 211, 238, 0.24), transparent 18rem),
     radial-gradient(circle at top left, rgba(37, 99, 235, 0.18), transparent 32rem),
     linear-gradient(135deg, var(--surface), #eaf2ff);
 }
@@ -66,11 +67,15 @@ select {
 }
 
 button {
+  align-items: center;
   border: 0;
   border-radius: 7px;
   background: linear-gradient(135deg, var(--accent), #38bdf8);
   color: #fff;
   cursor: pointer;
+  display: inline-flex;
+  gap: 8px;
+  justify-content: center;
   font-weight: 800;
   min-height: 42px;
   padding: 0 18px;
@@ -230,16 +235,11 @@ label {
 
 .sidebar-toggle {
   align-self: flex-start;
-  display: grid;
-  gap: 4px;
+  transition: transform 200ms ease;
 }
 
-.sidebar-toggle span {
-  background: currentColor;
-  border-radius: 999px;
-  display: block;
-  height: 2px;
-  width: 18px;
+.sidebar-collapsed .sidebar-toggle {
+  transform: rotate(180deg);
 }
 
 .sidebar nav {
@@ -260,6 +260,7 @@ label {
     background 180ms ease,
     border-color 180ms ease,
     transform 180ms ease;
+  position: relative;
 }
 
 .sidebar nav a.active,
@@ -268,6 +269,16 @@ label {
   border-color: rgba(255, 255, 255, 0.16);
   color: #fff;
   transform: translateX(2px);
+}
+
+.sidebar nav a.active::before {
+  background: linear-gradient(180deg, #38bdf8, #2563eb);
+  border-radius: 999px;
+  content: "";
+  height: 26px;
+  left: -8px;
+  position: absolute;
+  width: 4px;
 }
 
 .nav-icon {
@@ -384,6 +395,7 @@ label {
 }
 
 .notification-button i {
+  animation: pulseDot 1.6s ease infinite;
   background: var(--danger);
   border: 2px solid var(--panel-solid);
   border-radius: 999px;
@@ -392,6 +404,16 @@ label {
   right: 8px;
   top: 7px;
   width: 10px;
+}
+
+@keyframes pulseDot {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.45);
+  }
+  50% {
+    box-shadow: 0 0 0 7px rgba(220, 38, 38, 0);
+  }
 }
 
 .profile-chip {
@@ -562,6 +584,28 @@ main {
   overflow: hidden;
   padding: 28px;
   position: relative;
+}
+
+.hero-panel::after {
+  animation: floatGlow 6s ease-in-out infinite;
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  content: "";
+  height: 190px;
+  position: absolute;
+  right: -40px;
+  top: -60px;
+  width: 190px;
+}
+
+@keyframes floatGlow {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(18px);
+  }
 }
 
 .hero-panel .eyebrow,
@@ -942,6 +986,37 @@ tbody tr:hover {
   grid-template-columns: repeat(7, 1fr);
   height: 230px;
   padding-top: 18px;
+}
+
+.rechart-shell {
+  height: 300px;
+}
+
+.rechart-shell .recharts-tooltip-wrapper {
+  outline: none;
+}
+
+.quick-panel {
+  align-content: start;
+  display: grid;
+  gap: 14px;
+}
+
+.quick-panel button {
+  width: 100%;
+}
+
+.notification-card {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.12), rgba(34, 211, 238, 0.12));
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: grid;
+  gap: 6px;
+  padding: 14px;
+}
+
+.notification-card span {
+  color: var(--muted);
 }
 
 .line-chart span {

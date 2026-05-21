@@ -1,15 +1,30 @@
 import { useEffect, useState } from 'react';
+import {
+  BarChart3,
+  Bell,
+  BookOpen,
+  Building2,
+  ChevronLeft,
+  LayoutDashboard,
+  LogOut,
+  Moon,
+  Search,
+  Settings,
+  Sun,
+  UserRound,
+  UsersRound
+} from 'lucide-react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 
 const navItems = [
-  { path: '/', label: 'Dashboard', icon: 'DB' },
-  { path: '/students', label: 'Students', icon: 'ST' },
-  { path: '/courses', label: 'Courses', icon: 'CR' },
-  { path: '/departments', label: 'Departments', icon: 'DP' },
-  { path: '/analytics', label: 'Analytics', icon: 'AN' },
-  { path: '/profile', label: 'Profile', icon: 'PR' },
-  { path: '/settings', label: 'Settings', icon: 'SE' }
+  { path: '/', label: 'Dashboard', icon: LayoutDashboard },
+  { path: '/students', label: 'Students', icon: UsersRound },
+  { path: '/courses', label: 'Courses', icon: BookOpen },
+  { path: '/departments', label: 'Departments', icon: Building2 },
+  { path: '/analytics', label: 'Analytics', icon: BarChart3 },
+  { path: '/profile', label: 'Profile', icon: UserRound },
+  { path: '/settings', label: 'Settings', icon: Settings }
 ];
 
 export default function Layout() {
@@ -47,16 +62,18 @@ export default function Layout() {
           aria-label="Toggle sidebar"
           onClick={() => setCollapsed((value) => !value)}
         >
-          <span />
-          <span />
+          <ChevronLeft size={18} />
         </button>
         <nav>
-          {navItems.map((item) => (
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            return (
             <NavLink key={item.path} to={item.path} end={item.path === '/'}>
-              <span className="nav-icon">{item.icon}</span>
+              <span className="nav-icon"><Icon size={18} /></span>
               <span className="nav-label">{item.label}</span>
             </NavLink>
-          ))}
+            );
+          })}
         </nav>
         <div className="sidebar-card">
           <small>Institution Plan</small>
@@ -73,7 +90,7 @@ export default function Layout() {
           </div>
           <div className="topbar-actions">
             <label className="search-shell" aria-label="Search StudentHub">
-              <span>Search</span>
+              <Search size={17} />
               <input placeholder="Search students, courses..." />
             </label>
             <button
@@ -82,10 +99,10 @@ export default function Layout() {
               aria-label="Toggle color mode"
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
             >
-              {theme === 'dark' ? 'LT' : 'DK'}
+              {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
             </button>
             <button type="button" className="icon-button notification-button" aria-label="Notifications">
-              NT
+              <Bell size={18} />
               <i />
             </button>
             <button type="button" className="profile-chip" onClick={() => navigate('/profile')}>
@@ -93,7 +110,8 @@ export default function Layout() {
               <strong>{user?.name || 'Admin'}</strong>
             </button>
             <button type="button" className="ghost-button" onClick={handleLogout}>
-              Logout
+              <LogOut size={16} />
+              <span>Logout</span>
             </button>
           </div>
         </header>
