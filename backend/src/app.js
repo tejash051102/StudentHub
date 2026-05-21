@@ -12,9 +12,29 @@ import studentRoutes from './routes/studentRoutes.js';
 import { errorHandler, notFound } from './middleware/errorMiddleware.js';
 
 const app = express();
+const allowedOrigins = new Set([
+  process.env.CLIENT_URL || 'http://localhost:7001',
+  'http://localhost:7001',
+  'http://127.0.0.1:7001'
+]);
+
+function isAllowedDevOrigin(origin) {
+  return /^http:\/\/(10|172\.(1[6-9]|2\d|3[0-1])|192\.168)\.\d{1,3}\.\d{1,3}:7001$/.test(origin);
+}
 
 app.use(helmet());
-app.use(cors({ origin: process.env.CLIENT_URL || 'http://localhost:7001', credentials: true }));
+app.use(
+  cors({
+    origin(origin, callback) {
+      if (!origin || allowedOrigins.has(origin) || isAllowedDevOrigin(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(new Error(`CORS blocked origin: ${origin}`));
+    },
+    credentials: true
+  })
+);
 app.use(express.json());
 app.use(morgan('dev'));
 app.use(
