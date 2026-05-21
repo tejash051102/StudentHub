@@ -38,7 +38,7 @@ cp backend/.env.example backend/.env
 npm run dev
 ```
 
-The frontend runs on `http://localhost:5173` and the API runs on `http://localhost:5000`.
+The frontend runs on `http://localhost:7001` and the API runs on `http://localhost:7000`.
 
 ## Default API
 
