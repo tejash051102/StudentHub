@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import api from '../api/client.js';
+import { downloadCsv, printHtml } from '../utils/reports.js';
 
 const emptyStudent = {
   firstName: '',
@@ -12,14 +13,17 @@ const emptyStudent = {
   semester: 1,
   enrollmentYear: new Date().getFullYear(),
   status: 'Active',
-  address: ''
+  address: '',
+  batch: '',
+  profilePhoto: '',
+  guardian: { name: '', relation: '', phone: '', email: '' }
 };
 
 export default function Students() {
   const [students, setStudents] = useState([]);
   const [form, setForm] = useState(emptyStudent);
   const [editingId, setEditingId] = useState(null);
-  const [filters, setFilters] = useState({ search: '', department: '', status: '', page: 1 });
+  const [filters, setFilters] = useState({ search: '', department: '', status: '', semester: '', batch: '', course: '', page: 1 });
   const [pagination, setPagination] = useState({ page: 1, pages: 1, total: 0 });
   const [message, setMessage] = useState('');
   const [formOpen, setFormOpen] = useState(false);
@@ -78,7 +82,10 @@ export default function Students() {
       semester: student.semester,
       enrollmentYear: student.enrollmentYear,
       status: student.status,
-      address: student.address || ''
+      address: student.address || '',
+      batch: student.batch || '',
+      profilePhoto: student.profilePhoto || '',
+      guardian: student.guardian || emptyStudent.guardian
     });
     setFormOpen(true);
   }
@@ -86,6 +93,29 @@ export default function Students() {
   async function removeStudent(id) {
     await api.delete(`/students/${id}`);
     loadStudents();
+  }
+
+  function exportStudents() {
+    downloadCsv('studenthub-selected-students.csv', [
+      ['Name', 'Roll Number', 'Department', 'Course', 'Semester', 'Batch', 'Status', 'Guardian'],
+      ...students.map((student) => [
+        `${student.firstName} ${student.lastName}`,
+        student.rollNumber,
+        student.department,
+        student.course,
+        student.semester,
+        student.batch || '',
+        student.status,
+        student.guardian?.name || ''
+      ])
+    ]);
+  }
+
+  function printStudentCard(student) {
+    printHtml(
+      `${student.firstName} ${student.lastName} ID Card`,
+      `<div class="card"><h1>StudentHub ID Card</h1><h2>${student.firstName} ${student.lastName}</h2><p><strong>Roll:</strong> ${student.rollNumber}</p><p><strong>Department:</strong> ${student.department}</p><p><strong>Course:</strong> ${student.course}</p><p><strong>Status:</strong> ${student.status}</p></div>`
+    );
   }
 
   return (
@@ -105,6 +135,9 @@ export default function Students() {
           }}
         >
           Add Student
+        </button>
+        <button type="button" className="ghost-button" onClick={exportStudents}>
+          Export CSV
         </button>
       </div>
 
@@ -139,6 +172,21 @@ export default function Students() {
             <option>Inactive</option>
             <option>Graduated</option>
           </select>
+          <input
+            placeholder="Semester"
+            value={filters.semester}
+            onChange={(event) => setFilters({ ...filters, semester: event.target.value, page: 1 })}
+          />
+          <input
+            placeholder="Batch"
+            value={filters.batch}
+            onChange={(event) => setFilters({ ...filters, batch: event.target.value, page: 1 })}
+          />
+          <input
+            placeholder="Course"
+            value={filters.course}
+            onChange={(event) => setFilters({ ...filters, course: event.target.value, page: 1 })}
+          />
         </div>
         <div className="table-wrap">
           <table>
@@ -170,6 +218,9 @@ export default function Students() {
                   <td>
                     <button type="button" className="small-button ghost-button" onClick={() => setViewStudent(student)}>
                       View
+                    </button>
+                    <button type="button" className="small-button ghost-button" onClick={() => printStudentCard(student)}>
+                      ID
                     </button>
                     <button type="button" className="small-button" onClick={() => startEdit(student)}>
                       Edit
@@ -227,7 +278,9 @@ export default function Students() {
                 ['phone', 'Phone'],
                 ['rollNumber', 'Roll Number'],
                 ['department', 'Department'],
-                ['course', 'Course']
+                ['course', 'Course'],
+                ['batch', 'Batch'],
+                ['profilePhoto', 'Profile Photo URL']
               ].map(([name, label]) => (
                 <label key={name}>
                   {label}
@@ -272,6 +325,22 @@ export default function Students() {
                 Address
                 <input value={form.address} onChange={(event) => updateField('address', event.target.value)} />
               </label>
+              <label>
+                Guardian Name
+                <input value={form.guardian.name} onChange={(event) => updateField('guardian', { ...form.guardian, name: event.target.value })} />
+              </label>
+              <label>
+                Guardian Phone
+                <input value={form.guardian.phone} onChange={(event) => updateField('guardian', { ...form.guardian, phone: event.target.value })} />
+              </label>
+              <label>
+                Guardian Relation
+                <input value={form.guardian.relation} onChange={(event) => updateField('guardian', { ...form.guardian, relation: event.target.value })} />
+              </label>
+              <label>
+                Guardian Email
+                <input value={form.guardian.email} onChange={(event) => updateField('guardian', { ...form.guardian, email: event.target.value })} />
+              </label>
             </div>
             <div className="actions">
               <button type="submit">{editingId ? 'Update' : 'Save'} Student</button>
@@ -312,6 +381,9 @@ export default function Students() {
               <span>Department<strong>{viewStudent.department}</strong></span>
               <span>Course<strong>{viewStudent.course}</strong></span>
               <span>Status<strong>{viewStudent.status}</strong></span>
+              <span>Batch<strong>{viewStudent.batch || '-'}</strong></span>
+              <span>Guardian<strong>{viewStudent.guardian?.name || '-'}</strong></span>
+              <span>Documents<strong>{viewStudent.documents?.length || 0}</strong></span>
             </div>
           </section>
         </div>

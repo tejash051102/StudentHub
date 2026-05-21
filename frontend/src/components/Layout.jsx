@@ -1,15 +1,23 @@
 import { useEffect, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import {
   BarChart3,
   Bell,
   BookOpen,
   Building2,
+  CalendarDays,
+  CreditCard,
+  FileBarChart,
+  GraduationCap,
   ChevronLeft,
   LayoutDashboard,
   LogOut,
   Moon,
   Search,
   Settings,
+  ShieldCheck,
+  Sparkles,
+  ClipboardCheck,
   Sun,
   UserRound,
   UsersRound
@@ -20,10 +28,18 @@ import { useAuth } from '../context/AuthContext.jsx';
 const navItems = [
   { path: '/', label: 'Dashboard', icon: LayoutDashboard },
   { path: '/students', label: 'Students', icon: UsersRound },
+  { path: '/attendance', label: 'Attendance', icon: ClipboardCheck },
+  { path: '/fees', label: 'Fees', icon: CreditCard },
+  { path: '/results', label: 'Results', icon: GraduationCap },
   { path: '/courses', label: 'Courses', icon: BookOpen },
   { path: '/departments', label: 'Departments', icon: Building2 },
+  { path: '/faculty', label: 'Faculty', icon: UserRound },
   { path: '/analytics', label: 'Analytics', icon: BarChart3 },
+  { path: '/reports', label: 'Reports', icon: FileBarChart },
+  { path: '/calendar', label: 'Calendar', icon: CalendarDays },
+  { path: '/assistant', label: 'AI Assistant', icon: Sparkles },
   { path: '/profile', label: 'Profile', icon: UserRound },
+  { path: '/security', label: 'Security', icon: ShieldCheck },
   { path: '/settings', label: 'Settings', icon: Settings }
 ];
 
@@ -50,7 +66,9 @@ export default function Layout() {
     <div className={`app-shell ${collapsed ? 'sidebar-collapsed' : ''}`}>
       <aside className="sidebar">
         <div className="brand">
-          <span className="brand-mark">SH</span>
+          <span className="brand-mark">
+            <img src="/assets/studenthub-logo.png" alt="StudentHub logo" />
+          </span>
           <div>
             <strong>StudentHub</strong>
             <small>Student Information</small>
@@ -115,9 +133,17 @@ export default function Layout() {
             </button>
           </div>
         </header>
-        <main>
-          <Outlet />
-        </main>
+        <AnimatePresence mode="wait">
+          <motion.main
+            key={location.pathname}
+            initial={{ opacity: 0, y: 14, filter: 'blur(8px)' }}
+            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            exit={{ opacity: 0, y: -10, filter: 'blur(8px)' }}
+            transition={{ duration: 0.28, ease: 'easeOut' }}
+          >
+            <Outlet />
+          </motion.main>
+        </AnimatePresence>
       </div>
     </div>
   );

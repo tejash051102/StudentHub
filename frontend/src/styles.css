@@ -48,10 +48,21 @@ html {
 body {
   margin: 0;
   min-width: 320px;
+  animation: backgroundDrift 16s ease-in-out infinite alternate;
   background:
     radial-gradient(circle at 80% 10%, rgba(34, 211, 238, 0.24), transparent 18rem),
     radial-gradient(circle at top left, rgba(37, 99, 235, 0.18), transparent 32rem),
     linear-gradient(135deg, var(--surface), #eaf2ff);
+  background-size: 130% 130%;
+}
+
+@keyframes backgroundDrift {
+  from {
+    background-position: 0% 0%;
+  }
+  to {
+    background-position: 100% 42%;
+  }
 }
 
 :root[data-theme="dark"] body {
@@ -83,6 +94,24 @@ button {
     transform 180ms ease,
     box-shadow 180ms ease,
     background 180ms ease;
+  overflow: hidden;
+  position: relative;
+}
+
+button::after {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.28), transparent);
+  content: "";
+  height: 100%;
+  left: -120%;
+  position: absolute;
+  top: 0;
+  transform: skewX(-18deg);
+  transition: left 420ms ease;
+  width: 80%;
+}
+
+button:hover::after {
+  left: 130%;
 }
 
 button:hover {
@@ -224,13 +253,31 @@ label {
 }
 
 .brand-mark {
-  background: linear-gradient(135deg, #60a5fa, #22d3ee);
+  animation: logoGlow 3.4s ease-in-out infinite;
+  background: #000;
   border-radius: 8px;
   color: #081329;
   flex: 0 0 auto;
   font-weight: 950;
   height: 46px;
+  overflow: hidden;
   width: 46px;
+}
+
+.brand-mark img {
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+@keyframes logoGlow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 rgba(34, 211, 238, 0);
+  }
+  50% {
+    box-shadow: 0 0 24px rgba(34, 211, 238, 0.38);
+  }
 }
 
 .sidebar-toggle {
@@ -272,6 +319,7 @@ label {
 }
 
 .sidebar nav a.active::before {
+  animation: activeSlide 260ms ease both;
   background: linear-gradient(180deg, #38bdf8, #2563eb);
   border-radius: 999px;
   content: "";
@@ -279,6 +327,17 @@ label {
   left: -8px;
   position: absolute;
   width: 4px;
+}
+
+@keyframes activeSlide {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .nav-icon {
@@ -496,6 +555,31 @@ main {
   border: 1px solid var(--line);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
+  position: relative;
+}
+
+.panel::before,
+.auth-panel::before,
+.course-card::before,
+.department-card::before,
+.settings-card::before {
+  background: linear-gradient(90deg, transparent, rgba(37, 99, 235, 0.16), transparent);
+  content: "";
+  height: 1px;
+  left: 16px;
+  opacity: 0;
+  position: absolute;
+  right: 16px;
+  top: 0;
+  transition: opacity 220ms ease;
+}
+
+.panel:hover::before,
+.auth-panel:hover::before,
+.course-card:hover::before,
+.department-card:hover::before,
+.settings-card:hover::before {
+  opacity: 1;
 }
 
 .panel,
@@ -530,12 +614,23 @@ main {
 }
 
 .stat-icon {
+  animation: iconFloat 4s ease-in-out infinite;
   border-radius: 8px;
   color: #fff;
   flex: 0 0 auto;
   font-weight: 950;
   height: 48px;
   width: 48px;
+}
+
+@keyframes iconFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
 }
 
 .tone-blue .stat-icon,
@@ -621,6 +716,7 @@ main {
 }
 
 .metric-ring {
+  animation: ringPulse 3.2s ease-in-out infinite;
   align-items: center;
   background:
     radial-gradient(circle closest-side, rgba(255, 255, 255, 0.16) 72%, transparent 73%),
@@ -631,6 +727,16 @@ main {
   justify-items: center;
   place-content: center;
   width: 160px;
+}
+
+@keyframes ringPulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.035);
+  }
 }
 
 .metric-ring strong {
@@ -828,11 +934,14 @@ th {
 }
 
 tbody tr {
-  transition: background 160ms ease;
+  transition:
+    background 160ms ease,
+    transform 160ms ease;
 }
 
 tbody tr:hover {
   background: rgba(37, 99, 235, 0.05);
+  transform: translateX(4px);
 }
 
 .status-pill {
@@ -1019,6 +1128,56 @@ tbody tr:hover {
   color: var(--muted);
 }
 
+.heatmap-grid,
+.calendar-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.heatmap-grid {
+  grid-template-columns: repeat(7, minmax(24px, 1fr));
+}
+
+.heatmap-grid span {
+  background: linear-gradient(135deg, #2563eb, #22d3ee);
+  border-radius: 7px;
+  height: 38px;
+}
+
+.calendar-grid {
+  grid-template-columns: repeat(7, minmax(110px, 1fr));
+}
+
+.calendar-day {
+  background: rgba(37, 99, 235, 0.07);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  min-height: 96px;
+  padding: 10px;
+}
+
+.calendar-day span {
+  background: rgba(37, 99, 235, 0.12);
+  border-radius: 999px;
+  color: var(--accent);
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 900;
+  margin-top: 10px;
+  padding: 5px 8px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
 .line-chart span {
   align-items: end;
   background: linear-gradient(180deg, rgba(37, 99, 235, 0.08), rgba(37, 99, 235, 0.02));
@@ -1160,6 +1319,29 @@ tbody tr:hover {
   width: 100%;
 }
 
+.auth-logo {
+  animation: authLogoIn 520ms ease both, logoGlow 3.4s ease-in-out infinite 520ms;
+  background: #000;
+  border-radius: 50%;
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.16);
+  display: block;
+  height: 76px;
+  margin-bottom: 14px;
+  object-fit: cover;
+  width: 76px;
+}
+
+@keyframes authLogoIn {
+  from {
+    opacity: 0;
+    transform: scale(0.86) rotate(-8deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
 .auth-panel.wide {
   max-width: 760px;
 }
@@ -1174,6 +1356,105 @@ tbody tr:hover {
   margin: 0;
 }
 
+.form-progress {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+}
+
+.form-progress span {
+  background: rgba(37, 99, 235, 0.12);
+  border-radius: 999px;
+  flex: 1;
+  height: 9px;
+  overflow: hidden;
+}
+
+.form-progress b {
+  background: linear-gradient(90deg, var(--accent), #22d3ee);
+  border-radius: inherit;
+  display: block;
+  height: 100%;
+  transition: width 220ms ease;
+}
+
+.form-progress strong {
+  color: var(--accent);
+  font-size: 0.84rem;
+}
+
+.upload-preview {
+  align-items: center;
+  background: rgba(37, 99, 235, 0.06);
+  border: 1px dashed rgba(37, 99, 235, 0.28);
+  border-radius: 8px;
+  display: grid;
+  gap: 14px;
+  grid-template-columns: auto 1fr;
+  padding: 14px;
+}
+
+.upload-preview img {
+  background: #000;
+  border-radius: 50%;
+  height: 76px;
+  object-fit: cover;
+  width: 76px;
+}
+
+.password-strength {
+  align-items: center;
+  color: var(--muted);
+  display: flex;
+  font-size: 0.78rem;
+  gap: 8px;
+}
+
+.password-strength b {
+  background: rgba(148, 163, 184, 0.28);
+  border-radius: 999px;
+  display: block;
+  height: 6px;
+  overflow: hidden;
+  position: relative;
+  width: 90px;
+}
+
+.password-strength b::after {
+  background: var(--danger);
+  border-radius: inherit;
+  content: "";
+  display: block;
+  height: 100%;
+  width: 25%;
+}
+
+.password-strength.score-2 b::after {
+  background: var(--warning);
+  width: 50%;
+}
+
+.password-strength.score-3 b::after {
+  background: var(--cyan);
+  width: 75%;
+}
+
+.password-strength.score-4 b::after {
+  background: var(--green);
+  width: 100%;
+}
+
+.checkbox-row {
+  align-items: center;
+  display: flex;
+  gap: 10px;
+}
+
+.checkbox-row input {
+  min-height: auto;
+  width: auto;
+}
+
 .auth-showcase {
   background:
     linear-gradient(135deg, rgba(37, 99, 235, 0.95), rgba(14, 165, 233, 0.9)),
@@ -1182,6 +1463,17 @@ tbody tr:hover {
   min-height: 460px;
   overflow: hidden;
   padding: 34px;
+}
+
+.showcase-logo {
+  animation: iconFloat 4s ease-in-out infinite;
+  background: #000;
+  border: 2px solid rgba(255, 255, 255, 0.36);
+  border-radius: 50%;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.22);
+  height: 94px;
+  object-fit: cover;
+  width: 94px;
 }
 
 .auth-showcase .eyebrow {
@@ -1202,9 +1494,39 @@ tbody tr:hover {
 }
 
 .mini-chart i {
+  animation: chartRise 900ms ease both;
   background: rgba(255, 255, 255, 0.72);
   border-radius: 999px 999px 6px 6px;
   flex: 1;
+}
+
+.mini-chart i:nth-child(2) {
+  animation-delay: 90ms;
+}
+
+.mini-chart i:nth-child(3) {
+  animation-delay: 180ms;
+}
+
+.mini-chart i:nth-child(4) {
+  animation-delay: 270ms;
+}
+
+.mini-chart i:nth-child(5) {
+  animation-delay: 360ms;
+}
+
+@keyframes chartRise {
+  from {
+    opacity: 0;
+    transform: scaleY(0.2);
+    transform-origin: bottom;
+  }
+  to {
+    opacity: 1;
+    transform: scaleY(1);
+    transform-origin: bottom;
+  }
 }
 
 @media (max-width: 1160px) {
@@ -1316,5 +1638,9 @@ tbody tr:hover {
 
   .chart-bars {
     gap: 7px;
+  }
+
+  .calendar-grid {
+    grid-template-columns: 1fr;
   }
 }

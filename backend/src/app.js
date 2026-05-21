@@ -1,5 +1,6 @@
 import cors from 'cors';
 import express from 'express';
+import path from 'path';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import rateLimit from 'express-rate-limit';
@@ -7,6 +8,7 @@ import { isDatabaseConnected, requireDatabase } from './config/db.js';
 import authRoutes from './routes/authRoutes.js';
 import courseRoutes from './routes/courseRoutes.js';
 import dashboardRoutes from './routes/dashboardRoutes.js';
+import erpRoutes from './routes/erpRoutes.js';
 import profileRoutes from './routes/profileRoutes.js';
 import studentRoutes from './routes/studentRoutes.js';
 import { errorHandler, notFound } from './middleware/errorMiddleware.js';
@@ -36,6 +38,7 @@ app.use(
   })
 );
 app.use(express.json());
+app.use('/uploads', express.static(path.resolve('uploads')));
 app.use(morgan('dev'));
 app.use(
   rateLimit({
@@ -55,6 +58,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/students', studentRoutes);
 app.use('/api/courses', courseRoutes);
+app.use('/api/erp', erpRoutes);
 app.use('/api/profile', profileRoutes);
 app.use(notFound);
 app.use(errorHandler);

@@ -15,6 +15,18 @@ function buildStudentQuery(query) {
     filter.status = query.status;
   }
 
+  if (query.semester) {
+    filter.semester = Number(query.semester);
+  }
+
+  if (query.batch) {
+    filter.batch = new RegExp(query.batch, 'i');
+  }
+
+  if (query.course) {
+    filter.course = new RegExp(query.course, 'i');
+  }
+
   return filter;
 }
 
