@@ -3,6 +3,7 @@ import express from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import rateLimit from 'express-rate-limit';
+import { isDatabaseConnected, requireDatabase } from './config/db.js';
 import authRoutes from './routes/authRoutes.js';
 import courseRoutes from './routes/courseRoutes.js';
 import dashboardRoutes from './routes/dashboardRoutes.js';
@@ -26,9 +27,10 @@ app.use(
 );
 
 app.get('/api/health', (_req, res) => {
-  res.json({ status: 'ok' });
+  res.json({ status: 'ok', database: isDatabaseConnected() ? 'connected' : 'connecting' });
 });
 
+app.use('/api', requireDatabase);
 app.use('/api/auth', authRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/students', studentRoutes);
