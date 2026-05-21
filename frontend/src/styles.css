@@ -98,6 +98,14 @@ button {
   position: relative;
 }
 
+a.ghost-button {
+  align-items: center;
+  border-radius: 7px;
+  display: inline-flex;
+  min-height: 42px;
+  padding: 0 14px;
+}
+
 button::after {
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.28), transparent);
   content: "";
@@ -1263,6 +1271,15 @@ tbody tr:hover {
   width: 76px;
 }
 
+.student-photo-xl {
+  background: #000;
+  border: 4px solid rgba(37, 99, 235, 0.14);
+  border-radius: 50%;
+  height: 116px;
+  object-fit: cover;
+  width: 116px;
+}
+
 .modal-backdrop {
   align-items: center;
   background: rgba(15, 23, 42, 0.5);
@@ -1305,18 +1322,37 @@ tbody tr:hover {
 .auth-screen {
   align-items: center;
   display: grid;
-  gap: 24px;
-  grid-template-columns: minmax(320px, 480px) minmax(320px, 560px);
+  gap: 28px;
+  grid-template-columns: minmax(320px, 470px) minmax(360px, 610px);
   justify-content: center;
   min-height: 100vh;
   padding: 24px;
+  position: relative;
+}
+
+.auth-screen::before {
+  background:
+    linear-gradient(135deg, rgba(37, 99, 235, 0.12), transparent 32%),
+    linear-gradient(315deg, rgba(34, 211, 238, 0.14), transparent 34%);
+  content: "";
+  inset: 0;
+  pointer-events: none;
+  position: fixed;
+  z-index: -1;
 }
 
 .auth-panel {
   display: grid;
-  gap: 18px;
-  padding: 34px;
+  gap: 17px;
+  padding: 30px;
   width: 100%;
+}
+
+.login-brand-block {
+  align-items: center;
+  display: grid;
+  gap: 16px;
+  grid-template-columns: auto 1fr;
 }
 
 .auth-logo {
@@ -1325,10 +1361,9 @@ tbody tr:hover {
   border-radius: 50%;
   box-shadow: 0 16px 36px rgba(15, 23, 42, 0.16);
   display: block;
-  height: 76px;
-  margin-bottom: 14px;
+  height: 74px;
   object-fit: cover;
-  width: 76px;
+  width: 74px;
 }
 
 @keyframes authLogoIn {
@@ -1347,9 +1382,9 @@ tbody tr:hover {
 }
 
 .auth-panel h1 {
-  font-size: clamp(2rem, 4vw, 3rem);
+  font-size: clamp(2.1rem, 4vw, 3.2rem);
   line-height: 1.05;
-  margin: 4px 0 8px;
+  margin: 4px 0 10px;
 }
 
 .auth-panel p {
@@ -1455,14 +1490,77 @@ tbody tr:hover {
   width: auto;
 }
 
+.login-options {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+.auth-trust-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.auth-trust-row span {
+  background: rgba(37, 99, 235, 0.09);
+  border: 1px solid rgba(37, 99, 235, 0.12);
+  border-radius: 999px;
+  color: var(--accent);
+  font-size: 0.78rem;
+  font-weight: 900;
+  padding: 7px 10px;
+}
+
+.live-updated {
+  color: var(--muted);
+  font-weight: 800;
+}
+
 .auth-showcase {
   background:
-    linear-gradient(135deg, rgba(37, 99, 235, 0.95), rgba(14, 165, 233, 0.9)),
+    linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(37, 99, 235, 0.88), rgba(14, 165, 233, 0.82)),
     var(--accent);
   color: #fff;
-  min-height: 460px;
+  min-height: 560px;
   overflow: hidden;
   padding: 34px;
+  position: relative;
+}
+
+.auth-showcase::before {
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 42px 42px;
+  content: "";
+  inset: 0;
+  opacity: 0.28;
+  position: absolute;
+}
+
+.auth-showcase > * {
+  position: relative;
+  z-index: 1;
+}
+
+.showcase-topline {
+  align-items: center;
+  display: flex;
+  gap: 14px;
+  justify-content: space-between;
+  margin-bottom: 26px;
+}
+
+.showcase-topline span {
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  color: #e0f2fe;
+  font-size: 0.82rem;
+  font-weight: 900;
+  padding: 8px 12px;
 }
 
 .showcase-logo {
@@ -1481,16 +1579,69 @@ tbody tr:hover {
 }
 
 .auth-showcase h2 {
-  font-size: clamp(2rem, 4vw, 3.4rem);
+  font-size: clamp(2.35rem, 4vw, 4rem);
   line-height: 1.04;
+  margin: 12px 0;
+}
+
+.auth-showcase p {
+  color: #dbeafe;
+  font-size: 1rem;
+  line-height: 1.7;
+  max-width: 520px;
+}
+
+.login-preview-card {
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 8px;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 24px;
+  padding: 16px;
+}
+
+.login-preview-card div {
+  display: grid;
+  gap: 6px;
+}
+
+.login-preview-card span {
+  color: #bfdbfe;
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.login-preview-card strong {
+  color: #fff;
+  font-size: 1.5rem;
+}
+
+.live-status-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.live-status-strip span {
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  color: #e0f2fe;
+  font-size: 0.8rem;
+  font-weight: 900;
+  padding: 7px 10px;
 }
 
 .mini-chart {
   align-items: end;
   display: flex;
   gap: 14px;
-  height: 190px;
-  margin-top: 34px;
+  height: 150px;
+  margin-top: 26px;
 }
 
 .mini-chart i {
@@ -1642,5 +1793,15 @@ tbody tr:hover {
 
   .calendar-grid {
     grid-template-columns: 1fr;
+  }
+
+  .login-brand-block,
+  .login-preview-card {
+    grid-template-columns: 1fr;
+  }
+
+  .login-options {
+    align-items: flex-start;
+    flex-direction: column;
   }
 }

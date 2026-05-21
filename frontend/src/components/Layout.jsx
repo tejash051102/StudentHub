@@ -28,6 +28,7 @@ import { useAuth } from '../context/AuthContext.jsx';
 const navItems = [
   { path: '/', label: 'Dashboard', icon: LayoutDashboard },
   { path: '/students', label: 'Students', icon: UsersRound },
+  { path: '/approvals', label: 'Approvals', icon: ShieldCheck },
   { path: '/attendance', label: 'Attendance', icon: ClipboardCheck },
   { path: '/fees', label: 'Fees', icon: CreditCard },
   { path: '/results', label: 'Results', icon: GraduationCap },

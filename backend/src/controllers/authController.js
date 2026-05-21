@@ -18,6 +18,7 @@ function authResponse(user) {
       semester: user.semester,
       address: user.address,
       profilePhoto: user.profilePhoto,
+      approvalStatus: user.approvalStatus,
       isEmailVerified: user.isEmailVerified
     }
   };
@@ -78,6 +79,7 @@ export async function register(req, res, next) {
       address,
       acceptedTerms: true,
       profilePhoto: req.file ? `/uploads/profiles/${req.file.filename}` : '',
+      approvalStatus: (role || 'student') === 'student' ? 'pending' : 'approved',
       isEmailVerified: true
     });
     res.status(201).json(authResponse(user));
@@ -90,6 +92,15 @@ export async function login(req, res, next) {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
+
+    if (user?.role === 'student' && user.approvalStatus !== 'approved') {
+      return res.status(403).json({
+        message:
+          user.approvalStatus === 'rejected'
+            ? 'Your registration was rejected. Please contact the administration office.'
+            : 'Your account is pending admin approval.'
+      });
+    }
 
     if (!user || user.isLocked() || !(await user.matchPassword(password))) {
       if (user && !user.isLocked()) {

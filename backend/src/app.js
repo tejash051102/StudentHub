@@ -10,7 +10,9 @@ import courseRoutes from './routes/courseRoutes.js';
 import dashboardRoutes from './routes/dashboardRoutes.js';
 import erpRoutes from './routes/erpRoutes.js';
 import profileRoutes from './routes/profileRoutes.js';
+import publicRoutes from './routes/publicRoutes.js';
 import studentRoutes from './routes/studentRoutes.js';
+import userRoutes from './routes/userRoutes.js';
 import { errorHandler, notFound } from './middleware/errorMiddleware.js';
 
 const app = express();
@@ -53,6 +55,7 @@ app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok', database: isDatabaseConnected() ? 'connected' : 'connecting' });
 });
 
+app.use('/api/public', publicRoutes);
 app.use('/api', requireDatabase);
 app.use('/api/auth', authRoutes);
 app.use('/api/dashboard', dashboardRoutes);
@@ -60,6 +63,7 @@ app.use('/api/students', studentRoutes);
 app.use('/api/courses', courseRoutes);
 app.use('/api/erp', erpRoutes);
 app.use('/api/profile', profileRoutes);
+app.use('/api/users', userRoutes);
 app.use(notFound);
 app.use(errorHandler);
 

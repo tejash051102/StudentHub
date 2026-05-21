@@ -1,4 +1,7 @@
 import Student from '../models/Student.js';
+import Attendance from '../models/Attendance.js';
+import Fee from '../models/Fee.js';
+import Result from '../models/Result.js';
 
 function buildStudentQuery(query) {
   const filter = { createdBy: query.userId };
@@ -60,6 +63,63 @@ export async function createStudent(req, res, next) {
   try {
     const student = await Student.create({ ...req.body, createdBy: req.user._id });
     res.status(201).json(student);
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getStudentProfile(req, res, next) {
+  try {
+    const student = await Student.findOne({ _id: req.params.id, createdBy: req.user._id });
+
+    if (!student) {
+      return res.status(404).json({ message: 'Student not found' });
+    }
+
+    const [attendance, fees, results] = await Promise.all([
+      Attendance.find({ student: student._id, createdBy: req.user._id }).sort({ date: -1 }).limit(30),
+      Fee.find({ student: student._id, createdBy: req.user._id }).sort({ dueDate: 1 }),
+      Result.find({ student: student._id, createdBy: req.user._id }).sort({ createdAt: -1 })
+    ]);
+
+    res.json({ student, attendance, fees, results });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function addStudentDocument(req, res, next) {
+  try {
+    const student = await Student.findOne({ _id: req.params.id, createdBy: req.user._id });
+
+    if (!student) {
+      return res.status(404).json({ message: 'Student not found' });
+    }
+
+    student.documents.push(req.body);
+    await student.save();
+    res.status(201).json(student);
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function verifyStudentDocument(req, res, next) {
+  try {
+    const student = await Student.findOne({ _id: req.params.id, createdBy: req.user._id });
+
+    if (!student) {
+      return res.status(404).json({ message: 'Student not found' });
+    }
+
+    const document = student.documents.id(req.params.documentId);
+    if (!document) {
+      return res.status(404).json({ message: 'Document not found' });
+    }
+
+    document.verified = true;
+    await student.save();
+    res.json(student);
   } catch (error) {
     next(error);
   }

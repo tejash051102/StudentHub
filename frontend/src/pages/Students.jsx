@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import api from '../api/client.js';
 import { downloadCsv, printHtml } from '../utils/reports.js';
 
@@ -20,6 +21,7 @@ const emptyStudent = {
 };
 
 export default function Students() {
+  const navigate = useNavigate();
   const [students, setStudents] = useState([]);
   const [form, setForm] = useState(emptyStudent);
   const [editingId, setEditingId] = useState(null);
@@ -114,7 +116,7 @@ export default function Students() {
   function printStudentCard(student) {
     printHtml(
       `${student.firstName} ${student.lastName} ID Card`,
-      `<div class="card"><h1>StudentHub ID Card</h1><h2>${student.firstName} ${student.lastName}</h2><p><strong>Roll:</strong> ${student.rollNumber}</p><p><strong>Department:</strong> ${student.department}</p><p><strong>Course:</strong> ${student.course}</p><p><strong>Status:</strong> ${student.status}</p></div>`
+      `<div class="card" style="max-width:380px;text-align:center;background:#f6f9ff"><img src="/assets/studenthub-logo.png" style="width:86px;height:86px;border-radius:50%;background:#000"><h1>StudentHub</h1><h2>${student.firstName} ${student.lastName}</h2><p><strong>Roll:</strong> ${student.rollNumber}</p><p><strong>Department:</strong> ${student.department}</p><p><strong>Course:</strong> ${student.course}</p><div style="border:1px dashed #2563eb;border-radius:8px;padding:12px;margin:16px auto;width:130px;color:#2563eb;font-weight:700">QR<br>${student.rollNumber}</div><p><strong>Status:</strong> ${student.status}</p></div>`
     );
   }
 
@@ -218,6 +220,9 @@ export default function Students() {
                   <td>
                     <button type="button" className="small-button ghost-button" onClick={() => setViewStudent(student)}>
                       View
+                    </button>
+                    <button type="button" className="small-button ghost-button" onClick={() => navigate(`/students/${student._id}`)}>
+                      Profile
                     </button>
                     <button type="button" className="small-button ghost-button" onClick={() => printStudentCard(student)}>
                       ID

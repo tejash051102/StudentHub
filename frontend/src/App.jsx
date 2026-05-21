@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import Layout from './components/Layout.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import Analytics from './pages/Analytics.jsx';
+import Approvals from './pages/Approvals.jsx';
 import Assistant from './pages/Assistant.jsx';
 import Attendance from './pages/Attendance.jsx';
 import Calendar from './pages/Calendar.jsx';
@@ -18,6 +19,7 @@ import Results from './pages/Results.jsx';
 import Security from './pages/Security.jsx';
 import Settings from './pages/Settings.jsx';
 import Students from './pages/Students.jsx';
+import StudentProfile from './pages/StudentProfile.jsx';
 
 export default function App() {
   return (
@@ -34,6 +36,8 @@ export default function App() {
       >
         <Route index element={<Dashboard />} />
         <Route path="students" element={<Students />} />
+        <Route path="students/:id" element={<StudentProfile />} />
+        <Route path="approvals" element={<Approvals />} />
         <Route path="attendance" element={<Attendance />} />
         <Route path="fees" element={<Fees />} />
         <Route path="results" element={<Results />} />
